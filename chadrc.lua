@@ -2,6 +2,18 @@
 -- https://github.com/NvChad/ui/blob/v3.0/lua/nvconfig.lua
 -- Please read that file to know all available options :( 
 
+-- chadrc.lua or custom.lua configuration file
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--    pattern = {"*.c", "*.h"},
+--    callback = function()
+--        vim.cmd("silent! !clang-format -i %")
+--        vim.cmd("edit!")  -- Refresh buffer after formatting
+--    end,
+--})
+
+-- chadrc.lua or custom.lua configuration file
+vim.api.nvim_set_keymap("n", "<leader>cf", ":!clang-format -i %<CR><CR>", { noremap = true, silent = true })
+
 ---@type ChadrcConfig
 local M = {}
 
@@ -12,11 +24,10 @@ M.base46 = {
 	-- 	Comment = { italic = true },
 	-- 	["@comment"] = { italic = true },
 	-- },
--- nvim-tree cursor color change
   hl_override = {
     NvimTreeCursorLine = {
-         bg = "#42f545",
-         fg = "#1923bd",
+         bg = "#42f545",  -- or any other color from the palette
+         fg = "#1923bd",      -- set to fit within Catppuccin's colors
     },
   }
 }
@@ -28,10 +39,15 @@ local stbufnr = function()
   return vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
 end
 
+-- Enable Mouse Support
+vim.o.mouse = "a"
+-- vim.o.clipboard = "unnamedplus"
+
+
 M.ui = {
   statusline = {
     theme = "default",
-    order = { "mode", "relativepath", "file", "git", "%=", "lsp_msg", "%=", "diagnostics", "lsp", "cwd", "cursor" },
+    order = { "mode", "relativepath", "file", "git", "%=", "lsp_msg", "%=", "diagnostics", "lsp", "cwd", "cursor", },
     modules = {
       relativepath = function()
         local path = vim.api.nvim_buf_get_name(stbufnr())
@@ -40,10 +56,12 @@ M.ui = {
           return ""
         end
 
-        return "%#St_relativepath#  " .. vim.fn.expand("%:.:h") .. " /"
+        return "%#St_relativepath#  " .. vim.fn.expand("%:.:h") .. "/"
       end,
     },
   },
 }
 
 return M
+
+
